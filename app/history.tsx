@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHistory } from '../hooks/useHistory';
 import { TitleCard } from '../components/TitleCard';
 
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, Trash2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
 export default function HistoryScreen() {
-  const { history } = useHistory();
+  const { history, clearHistory } = useHistory();
   const router = useRouter();
 
   // Group history by date
@@ -18,6 +18,21 @@ export default function HistoryScreen() {
     acc[item.date].push(item);
     return acc;
   }, {} as Record<string, typeof history>);
+
+  const handleClearHistory = () => {
+    Alert.alert(
+      "Clear History",
+      "Are you sure you want to delete all your history? This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete All", 
+          style: "destructive", 
+          onPress: clearHistory 
+        }
+      ]
+    );
+  };
 
   return (
     <LinearGradient
@@ -34,10 +49,22 @@ export default function HistoryScreen() {
             >
               <ArrowLeft size={24} color="#B83D56" strokeWidth={3} />
             </TouchableOpacity>
+            
             <View className="bg-[#B83D56] px-4 py-2 border-2 border-white rounded-lg">
                <Text className="text-white font-black text-2xl uppercase italic">History</Text>
             </View>
-            <View style={{ width: 50 }} />
+
+            {history.length > 0 ? (
+              <TouchableOpacity 
+                onPress={handleClearHistory}
+                className="p-3 bg-white border-[3px] border-red-500 rounded-xl"
+                style={{ shadowColor: '#ef4444', shadowOffset: { width: 8, height: 8 }, shadowOpacity: 1, shadowRadius: 0 }}
+              >
+                <Trash2 size={24} color="#ef4444" strokeWidth={3} />
+              </TouchableOpacity>
+            ) : (
+              <View style={{ width: 50 }} />
+            )}
           </View>
           
           <ScrollView showsVerticalScrollIndicator={false}>

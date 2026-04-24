@@ -1,50 +1,61 @@
-# Welcome to your Expo app 👋
+# TubeTitle 📺
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+TubeTitle is a sleek, AI-powered mobile application built with React Native and Expo that helps creators generate high-CTR YouTube titles using voice input and Google's Gemini AI.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+- **Voice-to-Title:** Simply speak your video idea, and the AI will "cook" up several viral-ready title options.
+- **Gemini AI Integration:** Leverages Google's Gemini models for high-quality, growth-oriented title suggestions.
+- **Smart Recording:** Features intelligent silence detection to automatically process your speech.
+- **Neobrutalist UI:** A bold, high-contrast design for a modern and punchy user experience.
+- **History Tracking:** Keep track of your previous ideas and generated titles.
 
-   ```bash
-   npm install
-   ```
+## 🎙️ Voice Recording Details
 
-2. Start the app
+The app uses `expo-speech-recognition` with customized timing to ensure a smooth experience:
 
-   ```bash
-   npx expo start
-   ```
+- **Initial Wait:** If no speech is detected, the recording stops after **5 seconds**.
+- **Silence Detection:** Once you start speaking, the app waits for **10 seconds** of silence before automatically processing your request. This gives you plenty of time to pause and think between sentences.
+- **Manual Control:** You can always tap the microphone button to stop recording manually at any time.
 
-In the output, you'll find options to open the app in a
+## 🚀 Getting Started
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 1. Prerequisites
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Node.js
+- Expo Go (for basic testing) or a Development Build (recommended for voice features)
+- A Google Gemini API Key
 
-## Get a fresh project
+### 2. Setup Environment
 
-When you're ready, run:
+Create a `.env` file in the root directory:
 
-```bash
-npm run reset-project
+```env
+EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Installation
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 4. Run the App
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start
+```
 
-## Join the community
+*Note: Voice recognition features work best on physical devices using a development build.*
 
-Join our community of developers creating universal apps.
+## 🛠️ Tech Stack
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Framework:** [Expo](https://expo.dev) / [React Native](https://reactnative.dev)
+- **AI:** [Google Gemini API](https://ai.google.dev/)
+- **Styling:** [NativeWind](https://www.nativewind.dev/) (Tailwind CSS for React Native)
+- **Icons:** [Lucide React Native](https://lucide.dev/guide/packages/lucide-react-native)
+- **Voice:** [expo-speech-recognition](https://github.com/michaelyingling/expo-speech-recognition)
+
+---
+
+Developed with ❤️ for YouTube Creators.

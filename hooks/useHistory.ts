@@ -47,5 +47,14 @@ export function useHistory() {
     });
   }, []);
 
-  return { history, addToHistory };
+  const clearHistory = useCallback(async () => {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      setHistory([]);
+    } catch (e) {
+      console.error('Failed to clear history', e);
+    }
+  }, []);
+
+  return { history, addToHistory, clearHistory };
 }
