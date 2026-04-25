@@ -1,12 +1,19 @@
-import * as ExpoSpeechRecognition from "expo-speech-recognition";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Safely access modules
-const SpeechRecognition =
-  ExpoSpeechRecognition.ExpoSpeechRecognitionModule ||
-  ExpoSpeechRecognition.ExpoWebSpeechRecognition;
-const useSpeechRecognitionEvent =
-  ExpoSpeechRecognition.useSpeechRecognitionEvent;
+// Safely require the module to prevent top-level crashes in Expo Go
+let ExpoSpeechRecognition: any = null;
+try {
+  ExpoSpeechRecognition = require("expo-speech-recognition");
+} catch (e) {
+  // Silent fail, handled below
+}
+
+const SpeechRecognition = ExpoSpeechRecognition 
+  ? (ExpoSpeechRecognition.ExpoSpeechRecognitionModule || ExpoSpeechRecognition.ExpoWebSpeechRecognition)
+  : null;
+
+// Fallback dummy hook to satisfy the Rules of Hooks
+const useSpeechRecognitionEvent = ExpoSpeechRecognition?.useSpeechRecognitionEvent || (() => {});
 
 export function useVoice() {
   const [isListening, setIsListening] = useState(false);
@@ -29,36 +36,28 @@ export function useVoice() {
     }
   }, []);
 
-  // Safely register events if we are in a native build
-  if (typeof useSpeechRecognitionEvent === "function") {
-    try {
-      useSpeechRecognitionEvent("start", () => setIsListening(true));
-      useSpeechRecognitionEvent("end", () => setIsListening(false));
-      useSpeechRecognitionEvent("error", (event) => {
-        setError(event.error || "Speech recognition error");
-        setIsListening(false);
-      });
-      useSpeechRecognitionEvent("result", (event) => {
-        if (event.results?.[0]?.transcript) {
-          setTranscribedText(event.results[0].transcript);
-        }
-      });
-    } catch (e) {
-      // Silently fail in Expo Go
+  // REGISTER HOOKS AT TOP LEVEL (Unconditionally)
+  useSpeechRecognitionEvent("start", useCallback(() => setIsListening(true), []));
+  useSpeechRecognitionEvent("end", useCallback(() => setIsListening(false), []));
+  useSpeechRecognitionEvent("error", useCallback((event: any) => {
+    setError(event.error || "Speech recognition error");
+    setIsListening(false);
+  }, []));
+  useSpeechRecognitionEvent("result", useCallback((event: any) => {
+    if (event.results?.[0]?.transcript) {
+      setTranscribedText(event.results[0].transcript);
     }
-  }
+  }, []));
 
   // Handle Silence Timeout: Auto-stop when user stops speaking
   useEffect(() => {
     if (isListening) {
-      // Clear existing timeout
       if (silenceTimeoutRef.current) {
         clearTimeout(silenceTimeoutRef.current);
       }
 
-      // If they have spoken some text, wait 10 seconds of silence
-      // If they haven't spoken yet, give them 5 seconds to start
-      const silenceDelay = transcribedText.length > 0 ? 10000 : 5000;
+      // Wait 10 seconds of silence before auto-stopping
+      const silenceDelay = 10000;
 
       silenceTimeoutRef.current = setTimeout(() => {
         console.log("Silence detected, auto-stopping...");
@@ -79,7 +78,7 @@ export function useVoice() {
       setError(null);
 
       if (!SpeechRecognition) {
-        setError("Please use the TubeTitle app, not Expo Go");
+        setError("Speech recognition is not available in this environment (e.g. Expo Go). Please use a development build.");
         return;
       }
 
@@ -94,10 +93,11 @@ export function useVoice() {
       await SpeechRecognition.start({
         lang: "en-US",
         interimResults: true,
-        continuous: false, // Explicitly set to false to help auto-stop
+        continuous: true, // Allow continuous listening so our 10s timeout can manage the stop
       });
     } catch (e) {
       setError("Could not start voice recognition");
+      console.error(e);
     }
   }, []);
 

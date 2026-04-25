@@ -9,18 +9,27 @@
       "distribution": "internal",
       "android": {
         "image": "sdk-54"
+      },
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "REPLACE_WITH_YOUR_API_KEY_OR_USE_EAS_SECRET"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "image": "sdk-54"
+      },
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "REPLACE_WITH_YOUR_API_KEY_OR_USE_EAS_SECRET"
       }
     },
     "production": {
       "autoIncrement": true,
       "android": {
         "image": "sdk-54"
+      },
+      "env": {
+        "EXPO_PUBLIC_GEMINI_API_KEY": "REPLACE_WITH_YOUR_API_KEY_OR_USE_EAS_SECRET"
       }
     }
   },

@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
-import { Mic } from 'lucide-react-native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withRepeat, 
-  withTiming, 
-  interpolate,
-  withSpring
-} from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import { Mic } from "lucide-react-native";
+import React, { useEffect } from "react";
+import { Pressable, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSpring,
+  withTiming
+} from "react-native-reanimated";
 
 interface MicButtonProps {
   isListening: boolean;
@@ -35,7 +34,7 @@ export function MicButton({ isListening, onPress }: MicButtonProps) {
 
   const buttonStyle = useAnimatedStyle(() => ({
     transform: [{ scale: withSpring(isListening ? 1.1 : 1) }],
-    backgroundColor: isListening ? '#fde047' : '#ffffff',
+    backgroundColor: isListening ? "#fde047" : "#ffffff",
   }));
 
   const ringStyle = useAnimatedStyle(() => ({
@@ -45,32 +44,36 @@ export function MicButton({ isListening, onPress }: MicButtonProps) {
 
   return (
     <View className="items-center justify-center h-40 w-40">
-      <Animated.View 
+      <Animated.View
         className="absolute w-32 h-32 rounded-full border-[6px] border-[#B83D56] bg-pink-200"
         style={ringStyle}
       />
       <Pressable
         onPress={handlePress}
-        style={({ pressed }) => [{
-          transform: [{ translateY: pressed ? 4 : 0 }, { translateX: pressed ? 4 : 0 }],
-        }]}
+        style={({ pressed }) => [
+          {
+            transform: [
+              { translateY: pressed ? 4 : 0 },
+              { translateX: pressed ? 4 : 0 },
+            ],
+          },
+        ]}
       >
-        <Animated.View 
-          style={buttonStyle}
+        <Animated.View
           className="w-28 h-24 rounded-3xl border-[4px] border-[#B83D56] items-center justify-center"
           style={[
             buttonStyle,
             {
-              shadowColor: '#B83D56',
+              shadowColor: "#B83D56",
               shadowOffset: { width: 12, height: 12 },
               shadowOpacity: 1,
               shadowRadius: 0,
-            }
+            },
           ]}
         >
-          <Mic 
-            size={48} 
-            color="#B83D56" 
+          <Mic
+            size={48}
+            color="#B83D56"
             strokeWidth={3}
             fill={isListening ? "#B83D56" : "transparent"}
           />
